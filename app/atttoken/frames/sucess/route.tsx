@@ -2,7 +2,7 @@
 import { frames } from "../frames";
 import { Button } from "frames.js/next";
 
-export const POST = frames(async (ctx) => {
+const handleRequest = frames(async (ctx) => {
   const { message } = ctx;
   const txId = message?.transactionId;
 
@@ -21,3 +21,6 @@ export const POST = frames(async (ctx) => {
     ],
   };
 });
+
+export const GET = handleRequest;
+export const POST = handleRequest;

@@ -63,7 +63,11 @@ const handleRequest = frames(async (ctx) => {
       ),
       textInput: `${formatEther(payTokenBalance)}`,
       buttons: [
-        <Button action="tx" target={"/tx-data/approve"}>
+        <Button
+          action="tx"
+          target={"/tx-data/approve"}
+          post_url={"/frames/buy"}
+        >
           approve
         </Button>,
       ],
@@ -94,14 +98,6 @@ const handleRequest = frames(async (ctx) => {
       >
         Buy
       </Button>,
-      <Button
-        action="tx"
-        target={"/tx-data/approve"}
-        post_url={"/frames/success"}
-      >
-        approve
-      </Button>,
-      ,
     ],
   };
 });
