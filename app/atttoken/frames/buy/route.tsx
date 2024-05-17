@@ -48,7 +48,7 @@ const handleRequest = frames(async (ctx) => {
     attToken.address,
   ])) as bigint;
 
-  if (remainedAllowance > attTokenPrice) {
+  if (remainedAllowance < attTokenPrice) {
     return {
       image: (
         <div tw="flex flex-col">
