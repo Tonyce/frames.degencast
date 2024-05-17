@@ -1,28 +1,34 @@
 /* eslint-disable react/jsx-key */
+
 import { Button } from "frames.js/next";
-import { frames } from "./frames";
+import { frames, pixelFont } from "./frames";
+
+// console.log(path.join(process.cwd(), "public/fonts/pixel/Pixeled.ttf"));
 
 const handleRequest = frames(async (ctx) => {
   return {
-    image: (
-      <span>
-        {ctx.pressedButton
-          ? `I clicked ${ctx.searchParams.value}`
-          : `Click some button`}
-      </span>
-    ),
+    image: <span>Degencast Share</span>,
+    imageOptions: {
+      fonts: [
+        {
+          data: pixelFont,
+          name: "upheaval",
+        },
+      ],
+    },
     buttons: [
-      <Button action="post" target={{ query: { value: "Yes" } }}>
-        Say Yes
+      <Button action="post" target={"/frames/buy"}>
+        Buy
       </Button>,
-      <Button action="post" target={{ query: { value: "No" } }}>
-        Say No
+      <Button action="post" target={"/frames/sell"}>
+        Sell
       </Button>,
       <Button
-        action="post"
-        target={{ pathname: "/route1", query: { foo: "bar" } }}
+        action="tx"
+        target={"/tx-data/approve"}
+        post_url={"/frames/route1"}
       >
-        route 1
+        approve
       </Button>,
     ],
   };
