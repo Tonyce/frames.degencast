@@ -80,7 +80,11 @@ const handleRequest = async (
         <Button action="post" target={`/frames/select/${page}`}>
           Back
         </Button>,
-        <Button action="tx" target={`/tx-data/buy/${token}`}>
+        <Button
+          action="tx"
+          target={`/tx-data/buy/${token}`}
+          post_url={"/frames/success"}
+        >
           Buy
         </Button>,
         <Button action="tx" target={`/tx-data/sell/${token}`}>
