@@ -11,3 +11,5 @@ export const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
 export const ALLOWANCE_FRAME = process.env.ALLOWANCE_FRAME || "";
 export const ALLOWANCE_FRAME_API = process.env.ALLOWANCE_FRAME_API || "";
+
+export const FRAME_BASE_URL = process.env.FRAMES_BASE_URL;

@@ -6,7 +6,7 @@ export async function generateMetadata() {
     // provide a full URL to your /frames endpoint
     other: await fetchMetadata(
       new URL(
-        "/atttoken/frames",
+        "/tradetoken/frames",
         process.env.FRAMES_BASE_URL
           ? `${process.env.FRAMES_BASE_URL}`
           : "http://localhost:3000"
