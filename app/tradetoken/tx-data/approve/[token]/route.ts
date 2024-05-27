@@ -2,7 +2,13 @@ import { API_KEY_0X_API_KEY } from "@/lib/env";
 import { TransactionTargetResponse } from "frames.js";
 import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
-import { parseEther, erc20Abi, encodeFunctionData } from "viem";
+import {
+  parseEther,
+  erc20Abi,
+  encodeFunctionData,
+  getAbiItem,
+  GetAbiItemParameters,
+} from "viem";
 import { base } from "viem/chains";
 
 const ZERO_EX_ADDRESS = "0xdef1c0ded9bec7f1a1670819833240f027b25eff";
@@ -47,12 +53,17 @@ export async function POST(
   });
 
   console.log("calldata", calldata);
+  const abiItem = getAbiItem({
+    abi: erc20Abi,
+    name: "approve",
+    args: [order.to, parseEther(amount)],
+  } as GetAbiItemParameters)!;
 
   return NextResponse.json({
     chainId: `eip155:${base.id}`, // OP Mainnet 10
     method: "eth_sendTransaction",
     params: {
-      abi: erc20Abi,
+      abi: [abiItem],
       to: token,
       data: calldata,
     },
