@@ -62,6 +62,7 @@ export async function POST(
   return NextResponse.json({
     chainId: `eip155:${base.id}`, // OP Mainnet 10
     method: "eth_sendTransaction",
+    attribution: false,
     params: {
       abi: [abiItem],
       to: token,
