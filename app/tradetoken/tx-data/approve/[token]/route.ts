@@ -42,7 +42,8 @@ export async function POST(
   const calldata = encodeFunctionData({
     abi: erc20Abi,
     functionName: "approve",
-    args: [order.to, parseEther(amount)],
+    // args: [order.to, parseEther(amount)],
+    args: [ZERO_EX_ADDRESS, parseEther(amount)],
   });
 
   console.log("calldata", calldata);
