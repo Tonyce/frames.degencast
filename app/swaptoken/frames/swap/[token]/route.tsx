@@ -6,17 +6,37 @@ import { Button } from "frames.js/next";
 import { NextRequest } from "next/server";
 import SelectDialogItem from "../../components/select-dialog-item";
 import Title from "../../components/title";
+import { error } from "frames.js/core";
 
 const handleRequest = async (
   req: NextRequest,
   { params }: { params: { token: string } }
 ) => {
   const token = params.token;
+  const resp = await fetch(
+    `https://www.farcaster.in/api/tokens/${token.toLowerCase()}`
+  );
+  const tokenData = await resp.json();
 
   return await frames(async (ctx) => {
     const { message } = ctx;
     const page = ctx.searchParams.page;
     const inviteFid = ctx.searchParams.inviteFid || "";
+
+    if (!tokenData) {
+      return error("Token no support");
+    }
+    const tokenAddress = tokenData.tokenAddress;
+    const tokenName = tokenData.name;
+    const tokenImage = tokenData.imageURL;
+    const tokenMarketCap = tokenData.stats.market_cap_usd;
+    const tokenPrice = tokenData.stats.token_price_usd;
+    const tokenVolume24 = tokenData.stats.volume_usd.h24;
+    const quote_token_price_base_token =
+      tokenData.stats.quote_token_price_base_token;
+    const quote_token_price_usd = tokenData.stats.quote_token_price_usd;
+    const base_token_price_quote_token =
+      tokenData.stats.base_token_price_quote_token;
 
     return {
       image: (
@@ -28,7 +48,7 @@ const handleRequest = async (
             backgroundImage: `url('${FRAME_BASE_URL}/images/bg.png')`,
           }}
         >
-          <Title text={`Swap ${token}`.toUpperCase()} />
+          <Title text={`Swap ${tokenName}`.toUpperCase()} />
 
           <div
             style={{
@@ -41,7 +61,7 @@ const handleRequest = async (
             }}
           >
             <img
-              src={`https://ipfs.decentralized-content.com/ipfs/bafkreieudzvadtjy36j7x2i73isqw2jmgbwtum3p3eaahn4mnztuzl7y7e`}
+              src={`${tokenImage}`}
               alt=""
               tw="w-40 h-40 object-cover rounded-full mr-6 mt-3"
               className="w-40"
@@ -60,10 +80,16 @@ const handleRequest = async (
                 padding: "15px 30px",
               }}
             >
-              <SelectDialogItem title="Token" value={"DEGEN"} />
-              <SelectDialogItem title="Market cap" value="$2229.3M" />
-              <SelectDialogItem title="Price" value="$0.028282" />
-              <SelectDialogItem title="Buy/Sell(24H)" value="13.1313" />
+              <SelectDialogItem
+                title={`1 ${tokenName}`.toUpperCase()}
+                value={`${base_token_price_quote_token} ETH`}
+              />
+              <SelectDialogItem
+                title="1 ETH"
+                value={`${quote_token_price_base_token}`}
+              />
+              <SelectDialogItem title="Your Balance" value={`0${tokenName}`} />
+              <SelectDialogItem title="Transaction Fee" value={`0.3%`} />
             </div>
           </div>
         </div>
@@ -78,31 +104,18 @@ const handleRequest = async (
       },
       textInput: `Input the token quantity here...`,
       buttons: [
-        <Button action="post" target={`/frames/select/${page}`}>
-          Back
-        </Button>,
-        <Button
-          action="tx"
-          target={{ pathname: `/tx-data/buy/${token}`, query: { inviteFid } }}
-          post_url={{ pathname: "/frames/success", query: { inviteFid } }}
-        >
-          Buy
-        </Button>,
         <Button
           action="tx"
           target={{
-            pathname: `/tx-data/approve/${token}`,
-            query: { inviteFid },
+            pathname: `/tx-data/buy/${token}`,
+            query: { inviteFid, tokenAddress },
           }}
           post_url={{
-            pathname: `/frames/success/approve/${token}`,
-            query: { inviteFid },
+            pathname: "/frames/success",
+            query: { inviteFid, token },
           }}
         >
-          Sell
-        </Button>,
-        <Button action="link" target={`/frames/swap/higher`}>
-          View More
+          Buy
         </Button>,
       ],
     };

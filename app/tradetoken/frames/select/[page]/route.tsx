@@ -16,6 +16,7 @@ const handleRequest = async (
 
   return await frames(async (ctx) => {
     const { message } = ctx;
+    const inviteFid = ctx.searchParams.inviteFid || "";
 
     return {
       image: (
@@ -75,13 +76,19 @@ const handleRequest = async (
         ),
         <Button
           action="post"
-          target={{ pathname: `/frames/swap/degen`, query: { page } }}
+          target={{
+            pathname: `/frames/swap/degen`,
+            query: { page, inviteFid },
+          }}
         >
           Degen
         </Button>,
         <Button
           action="post"
-          target={{ pathname: `/frames/swap/higher`, query: { page } }}
+          target={{
+            pathname: `/frames/swap/higher`,
+            query: { page, inviteFid },
+          }}
         >
           Higher
         </Button>,
@@ -89,6 +96,7 @@ const handleRequest = async (
           action="post"
           target={{
             pathname: `/frames/select/${page + 1}`,
+            query: { inviteFid },
           }}
         >
           Next

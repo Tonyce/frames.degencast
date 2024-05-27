@@ -9,6 +9,7 @@ const FRAME_BASE_URL = process.env.FRAMES_BASE_URL;
 console.log("FRAME_BASE_URL", FRAME_BASE_URL);
 
 const handleRequest = frames(async (ctx) => {
+  const inviteFid = ctx.searchParams?.inviteFid || "";
   return {
     image: (
       <div
@@ -55,13 +56,19 @@ const handleRequest = frames(async (ctx) => {
       //   height: 480,
     },
     buttons: [
-      <Button action="post" target={{ pathname: "/frames/select/1" }}>
+      <Button
+        action="post"
+        target={{ pathname: "/frames/select/1", query: { inviteFid } }}
+      >
         Go Swap
       </Button>,
       <Button action="link" target={"https://dev.degencast.xyz"}>
         Leaderboard
       </Button>,
-      <Button action="post" target={"/tx-data/approve"}>
+      <Button
+        action="post"
+        target={{ pathname: "/frames/share", query: { inviteFid } }}
+      >
         Share & Earn
       </Button>,
     ],

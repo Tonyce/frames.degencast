@@ -2,25 +2,19 @@ import { API_KEY_0X_API_KEY } from "@/lib/env";
 import { TransactionTargetResponse } from "frames.js";
 import { getFrameMessage } from "frames.js/next/server";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  Abi,
-  createPublicClient,
-  encodeFunctionData,
-  getContract,
-  http,
-  parseEther,
-} from "viem";
-import { base, optimism } from "viem/chains";
+import { parseEther, erc20Abi } from "viem";
+import { base } from "viem/chains";
+
+const ZERO_EX_ADDRESS = "0xdef1c0ded9bec7f1a1670819833240f027b25eff";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { token: string } }
 ): Promise<NextResponse<TransactionTargetResponse>> {
   // const { token } = params;
-  // const { searchParams } = new URL(req.url)
-  // const inviteFid = searchParams.get('inviteFid') || ''
-
-  console.log("by token", params.token);
+  const { searchParams } = new URL(req.url);
+  const amount = searchParams.get("amount") || "1000";
+  console.log("sell token", params.token, amount);
   // TODO
   const token = "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed";
   const json = await req.json();
@@ -30,15 +24,16 @@ export async function POST(
     throw new Error("No frame message");
   }
 
-  let amount = frameMessage.inputText || "0.001";
+  // let amount = frameMessage.inputText || "1000";
 
   console.log({ amount });
   const baseUrl = `https://base.api.0x.org/swap/v1/quote?`;
   const eth = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
   const querys = new URLSearchParams({
-    buyToken: token, // address
-    sellToken: eth,
+    buyToken: eth, // address
+    sellToken: token,
+    // takerAddress: "0x4630CF0Fa55F83E11e43286fF04fc6930e1eB095",
     sellAmount: parseEther(amount).toString(),
   }).toString();
 
@@ -47,6 +42,8 @@ export async function POST(
   });
 
   const order = await res.json();
+
+  console.log(order);
 
   return NextResponse.json({
     chainId: `eip155:${base.id}`, // OP Mainnet 10
