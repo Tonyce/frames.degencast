@@ -53,18 +53,18 @@ export async function POST(
   });
 
   console.log("calldata", calldata);
-  const abiItem = getAbiItem({
-    abi: erc20Abi,
-    name: "approve",
-    args: [order.to, parseEther(amount)],
-  } as GetAbiItemParameters)!;
+  // const abiItem = getAbiItem({
+  //   abi: erc20Abi,
+  //   name: "approve",
+  //   args: [order.to, parseEther(amount)],
+  // } as GetAbiItemParameters)!;
 
   return NextResponse.json({
     chainId: `eip155:${base.id}`, // OP Mainnet 10
     method: "eth_sendTransaction",
     attribution: false,
     params: {
-      abi: [abiItem],
+      abi: erc20Abi,
       to: token,
       data: calldata,
     },
